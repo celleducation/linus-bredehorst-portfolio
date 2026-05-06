@@ -1753,12 +1753,13 @@ body.lightbox-open { overflow: hidden; }
 @media (max-width: 720px) {
   .seq-chessboard .cb-board,
   .seq-floorplan .fp-wrap,
-  .seq-live .live-sequence,
+  .seq-live .live-track,
   .seq-transit .tm-wrap,
   .seq-constellation .cn-wrap,
   .seq-eintag .et-wrap {
     display: none;
   }
+  .seq-live { padding: 0; background: transparent; }
   .seq-transit { padding: 0; background: transparent; }
   .seq-constellation { padding: 20px 0; }
   .seq-eintag { padding: 20px 0; }
@@ -2368,13 +2369,8 @@ function renderSequenceBlock(block) {
    Theme can be "light" (default) or "dark" (Acoma + Time). */
 function buildMobileSequence(items, theme = "light") {
   const list = el("div", { class: "mobile-seq theme-" + theme });
-  items.forEach((it, i) => {
+  items.forEach((it) => {
     const item = el("div", { class: "mobile-seq-item image-frame" });
-    const cap = el("div", { class: "mobile-seq-cap" });
-    cap.append(el("span", { class: "seq-num" }, String(i + 1).padStart(2, "0")));
-    if (it.marker) cap.append(el("span", { class: "seq-marker" }, it.marker));
-    if (it.sub) cap.append(el("span", { class: "seq-sub" }, it.sub));
-    item.append(cap);
     const imgWrap = el("div", { class: "mobile-seq-img" });
     if (it.src) imgWrap.append(el("img", { src: it.src, alt: it.alt || "", loading: "eager" }));
     item.append(imgWrap);
@@ -2431,28 +2427,6 @@ function renderFloorplan(rooms) {
   wrap.append(north);
 
   sec.append(wrap);
-
-  // Title block — architect's stamp at the bottom
-  const tb = el("div", { class: "fp-titleblock" });
-  tb.innerHTML = `
-    <div>
-      <span class="tb-label">Project</span>
-      <span class="tb-val">Tiefkühlschimmel</span>
-    </div>
-    <div>
-      <span class="tb-label">Drawing</span>
-      Floorplan · 1:50
-    </div>
-    <div>
-      <span class="tb-label">Date</span>
-      2024 / Ongoing
-    </div>
-    <div>
-      <span class="tb-label">Sheet</span>
-      01 / 01
-    </div>
-  `;
-  sec.append(tb);
 
   // Mobile fallback — clean editorial sequence, no labels
   sec.append(buildMobileSequence(rooms.map(r => ({
@@ -2976,45 +2950,11 @@ function renderChessboard(squares) {
   wrap.append(board);
   sec.append(wrap);
 
-  // Status line under the board
-  const status = el("div", { class: "cb-status" });
-  status.append(el("span", { class: "cb-sq", id: "cbSq" }, "—"));
-  status.append(el("span", { class: "cb-title", id: "cbTitle" }, ""));
-  status.append(el("span", { class: "cb-meta", id: "cbMeta" },
-    `${squares.length} pieces · click to enlarge`));
-  sec.append(status);
-
   // Mobile fallback — unified editorial sequence with notation markers
   sec.append(buildMobileSequence(squares.map(s => ({
     src: s.src,
     marker: s.sq.toUpperCase()      // chess notation only, no invented names
   })), "light"));
-
-  // Hover wires the status line
-  setTimeout(() => {
-    const sqEls = board.querySelectorAll(".cb-square");
-    const cbSq = document.getElementById("cbSq");
-    const cbTitle = document.getElementById("cbTitle");
-    const cbMeta = document.getElementById("cbMeta");
-    sqEls.forEach(s => {
-      s.addEventListener("mouseenter", () => {
-        cbSq.textContent = s.dataset.sq;
-        const piece = s.querySelector(".cb-piece");
-        if (piece) {
-          cbTitle.textContent = piece.dataset.title || "";
-          cbMeta.textContent = "click to enlarge";
-        } else {
-          cbTitle.textContent = "";
-          cbMeta.textContent = "empty square";
-        }
-      });
-    });
-    board.addEventListener("mouseleave", () => {
-      cbSq.textContent = "—";
-      cbTitle.textContent = "";
-      cbMeta.textContent = `${squares.length} pieces · click to enlarge`;
-    });
-  }, 0);
 
   return sec;
 }
@@ -3472,7 +3412,7 @@ function closeMobileNav() { qs("#nav").classList.remove("open"); }
     const it = items[index];
     lbImg.src = it.src;
     lbImg.alt = it.alt || "";
-    lbCap.textContent = it.alt || "";
+    lbCap.textContent = "";    // no caption — images speak for themselves
     lbCounter.textContent = items.length > 1 ? `${index + 1} / ${items.length}` : "";
     // pre-load neighbours for snappy navigation
     if (items.length > 1) {
