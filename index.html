@@ -2453,11 +2453,9 @@ function renderFloorplan(rooms) {
   `;
   sec.append(tb);
 
-  // Mobile fallback — unified editorial sequence with room captions
+  // Mobile fallback — clean editorial sequence, no labels
   sec.append(buildMobileSequence(rooms.map(r => ({
-    src: r.src, alt: r.alt,
-    marker: r.label,                 // e.g. "Wohnzimmer"
-    sub: r.alt                       // e.g. "Frieda"
+    src: r.src
   })), "light"));
 
   return sec;
@@ -2987,9 +2985,8 @@ function renderChessboard(squares) {
 
   // Mobile fallback — unified editorial sequence with notation markers
   sec.append(buildMobileSequence(squares.map(s => ({
-    src: s.src, alt: s.alt,
-    marker: s.sq.toUpperCase(),     // e.g. "E4"
-    sub: s.alt
+    src: s.src,
+    marker: s.sq.toUpperCase()      // chess notation only, no invented names
   })), "light"));
 
   // Hover wires the status line
