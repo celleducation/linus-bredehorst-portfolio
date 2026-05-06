@@ -3222,7 +3222,12 @@ function pageAbout() {
   const page = el("div", { class: "page about" });
 
   const portrait = el("div", { class: "about-portrait" });
-  portrait.append(renderImage({ ratio: "4-5", label: "portrait of the artist" }));
+  portrait.append(renderImage({
+    ratio: "2-3",
+    src: "images/about/portrait.jpg",
+    alt: "Linus Bredehorst",
+    label: ""
+  }));
   page.append(portrait);
 
   const text = el("div", { class: "about-text" });
