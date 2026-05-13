@@ -2970,7 +2970,7 @@ function pageHome() {
   heroImg.append(renderImage({
     ratio: "2-3",
     src: "images/schach/12.jpg",
-    alt: "Magnus Carlsen — from Schach"
+    alt: ""
   }));
   // Subtle gradient + text overlay
   heroImg.append(el("div", { class: "home-hero-scrim" }));
@@ -2979,7 +2979,7 @@ function pageHome() {
 
   const kicker = el("div", { class: "home-hero-kicker mono" });
   kicker.append(el("span", {}, "Portfolio"));
-  kicker.append(el("span", {}, "2019 — 2024"));
+  kicker.append(el("span", {}, "2019 — 2026"));
   kicker.append(el("span", {}, "Berlin"));
   heroOverlay.append(kicker);
 
@@ -2989,7 +2989,7 @@ function pageHome() {
 
   const credit = el("div", { class: "home-hero-credit mono" });
   credit.append(el("span", {}, "Featured / Schach"));
-  credit.append(el("span", {}, "Editorial · 2024 →"));
+  credit.append(el("span", {}, "Editorial · 2026 →"));
   heroOverlay.append(credit);
 
   heroImg.append(heroOverlay);
