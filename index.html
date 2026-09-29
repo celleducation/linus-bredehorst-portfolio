@@ -142,6 +142,38 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   color: #111;
 }
 .bp-buy:hover { background: #111; border-color: #111; color: #f6e21a; }
+.bp-gal { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.bp-main { background: #fff; aspect-ratio: 1 / 1; overflow: hidden; }
+.bp-track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.bp-track::-webkit-scrollbar { display: none; }
+.bp-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+.bp-slide img { width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; }
+.bp-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.bp-thumb {
+  background: #fff;
+  border: 1px solid transparent;
+  padding: 0;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity .25s var(--ease), border-color .25s var(--ease);
+}
+.bp-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.bp-thumb:hover { opacity: 1; }
+.bp-thumb.is-active { opacity: 1; border-color: var(--ink); }
 .bp-order {
   max-width: 1280px;
   margin: 0 auto;
@@ -4409,13 +4441,46 @@ function pageBook() {
   const hero = el("section", { class: "book-section bp-hero" });
   const inner = el("div", { class: "book-inner" });
 
-  const cover = el("div", { class: "book-cover" });
-  cover.append(el("img", {
-    src: "images/book/mockup.jpg",
-    alt: "En Passant — photobook by Linus Bredehorst",
-    loading: "eager"
-  }));
-  inner.append(cover);
+  // Product gallery — swipe on mobile, thumbnails underneath
+  const shots = [
+    "images/book/cover-3d.jpg",
+    "images/book/cover.jpg",
+    "images/book/mockup.jpg",
+    "images/book/back.jpg"
+  ];
+  const gal = el("div", { class: "bp-gal" });
+  const stage = el("div", { class: "bp-main" });
+  const track = el("div", { class: "bp-track" });
+  shots.forEach((src) => {
+    const slide = el("div", { class: "bp-slide" });
+    slide.append(el("img", {
+      src, alt: "En Passant — photobook by Linus Bredehorst",
+      loading: "eager", decoding: "async", draggable: false
+    }));
+    track.append(slide);
+  });
+  stage.append(track);
+  gal.append(stage);
+  const thumbs = el("div", { class: "bp-thumbs" });
+  const thumbBtns = shots.map((src, i) => {
+    const b = el("button", { type: "button", class: "bp-thumb" + (i === 0 ? " is-active" : ""), "aria-label": "View image " + (i + 1) });
+    b.append(el("img", { src, alt: "", loading: "eager", decoding: "async" }));
+    b.addEventListener("click", () => {
+      track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" });
+    });
+    thumbs.append(b);
+    return b;
+  });
+  gal.append(thumbs);
+  let raf = 0;
+  track.addEventListener("scroll", () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const idx = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+      thumbBtns.forEach((b, i) => b.classList.toggle("is-active", i === idx));
+    });
+  }, { passive: true });
+  inner.append(gal);
 
   const text = el("div", { class: "book-text" });
   text.append(el("div", { class: "book-kicker mono" }, "New Release · 2026"));
