@@ -201,7 +201,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     position: absolute; top: 100%; left: 0; right: 0;
     background: var(--bg); padding: 28px var(--pad-x) 40px;
     border-bottom: 1px solid var(--hair);
-    gap: 18px; align-items: flex-start;
+    gap: 18px; align-items: center;
+    text-align: center;
   }
   .nav.open ul a { font-size: 13px; }
   .nav-toggle {
@@ -428,6 +429,30 @@ body.lightbox-open { overflow: hidden; }
   background: var(--muted);
   animation: scrollLine 2.4s ease-in-out infinite;
 }
+/* Hero fits the screen exactly (incl. mobile browser bars); text sits slightly above centre */
+.home-hero-text {
+  box-sizing: border-box;
+  min-height: calc(100vh - 68px);
+  min-height: calc(100svh - 68px);
+  padding: 8px var(--pad-x) 128px;
+  gap: 22px;
+}
+.home-scroll-cue {
+  bottom: 28px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  background: none;
+  border: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--ink);
+  opacity: 1;
+  white-space: nowrap;
+}
+.home-scroll-cue .line { height: 48px; background: var(--ink); }
+.home-scroll-cue:hover { color: var(--ink); }
+.home-scroll-cue:hover .line { background: #f6e21a; }
 @keyframes scrollLine {
   0%, 100% { transform: scaleY(1); transform-origin: top; opacity: 0.5; }
   50% { transform: scaleY(0.4); transform-origin: bottom; opacity: 1; }
@@ -3777,9 +3802,13 @@ function pageHome() {
   roles.append(el("span", {}, "Documentary"));
   hero.append(roles);
 
-  const scrollCue = el("div", { class: "home-scroll-cue mono" });
+  const scrollCue = el("button", { type: "button", class: "home-scroll-cue mono" });
   scrollCue.append(el("span", { class: "line" }));
   scrollCue.append(el("span", { class: "label" }, "Scroll for the book"));
+  scrollCue.addEventListener("click", () => {
+    const target = page.querySelector(".book-section");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
   hero.append(scrollCue);
 
   page.append(hero);
@@ -4174,7 +4203,7 @@ function bindFlipbook(sec, total) {
 function pageIndex() {
   const page = el("div", { class: "page index-page" });
   const head = el("header", { class: "index-head" });
-  head.append(el("h1", { html: "Index of <em>Projects</em>" }));
+  head.append(el("h1", { html: "<em>Portfolio</em>" }));
   head.append(el("p", { class: "intro" },
     "A selection of ongoing and recent work. All photography by Linus Bredehorst unless stated otherwise."
   ));
