@@ -4454,7 +4454,9 @@ function pageBook() {
   const fName = el("input", { type: "text", name: "name", required: true, autocomplete: "name" });
   const fMail = el("input", { type: "email", name: "email", required: true, autocomplete: "email" });
   const fQty = el("input", { type: "number", name: "copies", min: 1, value: 1, required: true });
-  const fAddr = el("textarea", { name: "address", rows: 3, required: true, autocomplete: "street-address" });
+  const fAddr = el("input", { type: "text", name: "address", required: true, autocomplete: "street-address" });
+  const fZip = el("input", { type: "text", name: "postcode", required: true, autocomplete: "postal-code", inputMode: "numeric" });
+  const fCity = el("input", { type: "text", name: "city", required: true, autocomplete: "address-level2" });
   const fMsg = el("textarea", { name: "message", rows: 3 });
   const row = el("div", { class: "bp-row" });
   row.append(field("Name", fName));
@@ -4462,6 +4464,10 @@ function pageBook() {
   form.append(row);
   form.append(field("Copies", fQty));
   form.append(field("Shipping address", fAddr));
+  const row2 = el("div", { class: "bp-row" });
+  row2.append(field("Postcode", fZip));
+  row2.append(field("City", fCity));
+  form.append(row2);
   form.append(field("Message (optional)", fMsg));
   const send = el("button", { type: "submit", class: "book-btn bp-buy mono" }, "Send request →");
   form.append(send);
@@ -4475,7 +4481,7 @@ function pageBook() {
       "Name: " + fName.value + "\n" +
       "Email: " + fMail.value + "\n" +
       "Copies: " + fQty.value + "\n\n" +
-      "Shipping address:\n" + fAddr.value + "\n" +
+      "Shipping address:\n" + fAddr.value + "\n" + fZip.value + " " + fCity.value + "\n" +
       (fMsg.value ? "\nMessage:\n" + fMsg.value + "\n" : "");
     location.href = "mailto:linusbredehorstfoto@gmail.com" +
       "?subject=" + encodeURIComponent("En Passant — Order request") +
