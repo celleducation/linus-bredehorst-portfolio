@@ -192,6 +192,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   margin: 16px 0 0;
 }
 .bp-order-title em { font-style: italic; }
+.bp-note {
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 34ch;
+  margin: 20px 0 0;
+}
 .bp-form { display: flex; flex-direction: column; gap: 28px; }
 .bp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 .bp-field { display: flex; flex-direction: column; gap: 10px; }
@@ -4493,7 +4501,7 @@ function pageBook() {
   meta.append(el("span", {}, "First edition"));
   text.append(meta);
   const cta = el("div", { class: "book-cta" });
-  const buy = el("button", { type: "button", class: "book-btn bp-buy mono" }, "Buy the book →");
+  const buy = el("button", { type: "button", class: "book-btn bp-buy mono" }, "Request a copy →");
   cta.append(buy);
   text.append(cta);
   inner.append(text);
@@ -4507,6 +4515,8 @@ function pageBook() {
   const oh = el("h2", { class: "bp-order-title display" });
   oh.innerHTML = "Request <em>a copy</em>";
   head.append(oh);
+  head.append(el("p", { class: "bp-note" },
+    "Non-binding request, no payment now. You'll get a personal reply by email with all details."));
   order.append(head);
 
   const form = el("form", { class: "bp-form", noValidate: false });
@@ -4534,7 +4544,7 @@ function pageBook() {
   row2.append(field("City", fCity));
   form.append(row2);
   form.append(field("Message (optional)", fMsg));
-  const send = el("button", { type: "submit", class: "book-btn bp-buy mono" }, "Send request →");
+  const send = el("button", { type: "submit", class: "book-btn bp-buy mono" }, "Send non-binding request →");
   form.append(send);
   order.append(form);
   page.append(order);
