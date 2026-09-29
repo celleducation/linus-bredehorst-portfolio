@@ -668,9 +668,8 @@ body.lightbox-open { overflow: hidden; }
 /* The book itself — realistic open-book architecture */
 .flipbook-book {
   position: relative;
-  width: 100%;
-  aspect-ratio: 380 / 280;
-  max-height: 62vh;
+  width: min(100%, calc(74vh * 1.44));
+  aspect-ratio: 1.44 / 1;
   margin: 0 auto;
   transform-style: preserve-3d;
   transform: rotateX(10deg);
@@ -682,7 +681,7 @@ body.lightbox-open { overflow: hidden; }
 .fb-cover {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #f8c010 0%, #e8a800 100%);
+  background: linear-gradient(180deg, #f6e21a 0%, #e9d200 100%);
   border-radius: 3px 4px 4px 3px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.25),
@@ -697,7 +696,7 @@ body.lightbox-open { overflow: hidden; }
   position: absolute;
   top: 8px; bottom: 8px;
   left: 12px; right: 12px;
-  background: #fdfcf6;
+  background: #fafaf8;
   z-index: 1;
   /* Stack edge along top and bottom */
   box-shadow:
@@ -745,18 +744,18 @@ body.lightbox-open { overflow: hidden; }
   position: absolute;
   top: 8px; bottom: 8px;
   width: calc(50% - 16px);
-  background: #fdfcf6;
+  background: #fafaf8;
   overflow: hidden;
-  padding: 24px 30px 34px;
+  padding: 2.4% 2.6% 2.4%;
   box-sizing: border-box;
   z-index: 5;
 }
-.fb-left  { left: 12px; padding-right: 22px; }
-.fb-right { right: 12px; padding-left: 22px; }
+.fb-left  { left: 12px; padding-right: 1.4%; }
+.fb-right { right: 12px; padding-left: 1.4%; }
 .fb-page img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 /* Inner curl shadow into the spine */
@@ -835,21 +834,21 @@ body.lightbox-open { overflow: hidden; }
   inset: 0;
   backface-visibility: hidden;
   overflow: hidden;
-  background: #fdfcf6;
-  padding: 24px 30px 34px;
+  background: #fafaf8;
+  padding: 4.8% 5.2% 4.8%;
   box-sizing: border-box;
   box-shadow:
     0 6px 20px rgba(0, 0, 0, 0.35),
     0 2px 6px rgba(0, 0, 0, 0.25);
 }
-.fb-flip.forward .fb-flip-front { padding-left: 22px; }
-.fb-flip.forward .fb-flip-back  { padding-right: 22px; }
-.fb-flip.backward .fb-flip-front { padding-right: 22px; }
-.fb-flip.backward .fb-flip-back  { padding-left: 22px; }
+.fb-flip.forward .fb-flip-front { padding-left: 2.8%; }
+.fb-flip.forward .fb-flip-back  { padding-right: 2.8%; }
+.fb-flip.backward .fb-flip-front { padding-right: 2.8%; }
+.fb-flip.backward .fb-flip-back  { padding-left: 2.8%; }
 .fb-flip-face img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 .fb-flip-back {
@@ -954,12 +953,12 @@ body.lightbox-open { overflow: hidden; }
   .fb-page { top: 10px; bottom: 12px; width: calc(50% - 20px); }
   .fb-left { left: 18px; }
   .fb-right { right: 18px; }
-  .fb-page { padding: 6px 8px 8px; }
+  .fb-page { padding: 2.4% 2.6% 2.4%; }
   .fb-spine { top: 10px; bottom: 12px; left: calc(50% - 3px); width: 6px; }
   .fb-flip { top: 10px; bottom: 12px; width: calc(50% - 20px); }
   .fb-flip.forward { right: 18px; }
   .fb-flip.backward { left: 18px; }
-  .fb-flip-face { padding: 6px 8px 8px; }
+  .fb-flip-face { padding: 4.8% 5.2% 4.8%; }
   .fb-inner-shadow { width: 20px; }
   .flipbook-controls { gap: 20px; margin-top: 40px; }
   .flipbook-btn { width: 44px; height: 44px; }
