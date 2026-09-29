@@ -2658,7 +2658,7 @@ const PROJECTS = [
     },
     layout: "editorial",
     sequence: [
-      // 26 portraits, presented as a clean grid in the sequence Linus chose.
+      // 24 portraits, presented as a clean grid in the sequence Linus chose.
       { kind: "portrait-grid", images: [
         { src: "images/en-passant/01.jpg" },
         { src: "images/en-passant/02.jpg" },
@@ -2683,9 +2683,7 @@ const PROJECTS = [
         { src: "images/en-passant/21.jpg" },
         { src: "images/en-passant/22.jpg" },
         { src: "images/en-passant/23.jpg" },
-        { src: "images/en-passant/24.jpg" },
-        { src: "images/en-passant/25.jpg" },
-        { src: "images/en-passant/26.jpg" }
+        { src: "images/en-passant/24.jpg" }
       ]}
     ]
   },
@@ -3714,12 +3712,12 @@ function buildFlipbook() {
   title.innerHTML = "Inside <em>En Passant</em>";
   head.append(title);
   head.append(el("p", { class: "mono flipbook-sub" },
-    "Thirteen spreads · twenty-six portraits"));
+    "Twelve spreads · twenty-four portraits"));
   sec.append(head);
 
-  // 26 portraits paired into 13 spreads. First image = left page, second = right.
+  // 24 portraits paired into 12 spreads. First image = left page, second = right.
   const spreads = [];
-  for (let i = 1; i <= 26; i += 2) {
+  for (let i = 1; i <= 24; i += 2) {
     const a = String(i).padStart(2, "0");
     const b = String(i + 1).padStart(2, "0");
     spreads.push([`images/en-passant/${a}.jpg`, `images/en-passant/${b}.jpg`]);
@@ -3797,7 +3795,7 @@ function buildFlipbook() {
     "aria-label": "Previous spread"
   });
   prevBtn.innerHTML = "&larr;";
-  const counter = el("span", { class: "flipbook-counter mono" }, "01 / 13");
+  const counter = el("span", { class: "flipbook-counter mono" }, "01 / 12");
   const nextBtn = el("button", {
     class: "flipbook-btn flipbook-next",
     "aria-label": "Next spread"
@@ -3835,7 +3833,12 @@ function bindFlipbook(sec, total) {
       + " / " + String(total).padStart(2, "0");
   }
 
-  function doFlip(direction) {
+  // Wait until an image is decoded so a src swap never shows a blank frame
+  function ready(img) {
+    return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+  }
+
+  async function doFlip(direction) {
     if (isFlipping) return;
     const nextIndex = direction === "forward"
       ? (current + 1) % total
@@ -3872,6 +3875,10 @@ function bindFlipbook(sec, total) {
       // Right stays as current-right
     }
 
+    // Only start once all involved images are decoded (no flash)
+    await Promise.all([ready(flipFrontImg), ready(flipBackImg),
+      ready(direction === "forward" ? rightImg : leftImg)]);
+
     // Activate flip
     flip.classList.add("is-active");
     // Force reflow before adding is-flipping so transition kicks in
@@ -3881,15 +3888,16 @@ function bindFlipbook(sec, total) {
     });
 
     // On animation end
-    setTimeout(() => {
-      // Finalise underlying pages
-      if (direction === "forward") {
-        leftImg.src = nxtSpread[0];
-      } else {
-        rightImg.src = nxtSpread[1];
-      }
-      // Hide flip
+    setTimeout(async () => {
+      // Finalise underlying pages, and wait for decode before uncovering them
+      const under = direction === "forward" ? leftImg : rightImg;
+      under.src = direction === "forward" ? nxtSpread[0] : nxtSpread[1];
+      await ready(under);
+      // Hide flip instantly (no snap-back transition)
+      flip.style.transition = "none";
       flip.classList.remove("is-active", "is-flipping", "forward", "backward");
+      void flip.offsetWidth;
+      flip.style.transition = "";
       current = nextIndex;
       updateCounter();
       isFlipping = false;
