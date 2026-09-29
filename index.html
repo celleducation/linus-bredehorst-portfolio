@@ -126,6 +126,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   padding: 9px 16px;
 }
 .nav ul a.nav-buy::after { display: none; }
+.nav a.brand { transition: color .3s var(--ease); }
+.nav a.brand:hover { color: #f6e21a; }
 .nav ul a.nav-buy:hover { background: #111; color: #f6e21a; }
 .nav ul a.nav-buy.active { background: #f6e21a; color: #111; }
 
@@ -140,25 +142,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   color: #111;
 }
 .bp-buy:hover { background: #111; border-color: #111; color: #f6e21a; }
-.bp-gallery {
-  padding: 0 var(--pad-x) clamp(80px, 12vh, 160px);
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(10px, 1.4vw, 22px);
-}
-.bp-gallery img {
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  display: block;
-}
-.bp-gallery .bp-wide { grid-column: 1 / -1; }
-@media (max-width: 720px) {
-  .bp-gallery { grid-template-columns: 1fr; }
-}
 
 /* Mobile menu toggle */
 .nav-toggle { display: none; }
@@ -4257,14 +4240,6 @@ function pageBook() {
   inner.append(text);
   hero.append(inner);
   page.append(hero);
-
-  const gallery = el("section", { class: "bp-gallery" });
-  [["book-01.jpg", "bp-wide"], ["book-02.jpg", ""], ["book-03.jpg", ""]].forEach(([f, c]) => {
-    gallery.append(el("img", {
-      src: "images/book/" + f, alt: "", class: c, loading: "eager", decoding: "async"
-    }));
-  });
-  page.append(gallery);
 
   page.append(renderFooter());
   return page;
